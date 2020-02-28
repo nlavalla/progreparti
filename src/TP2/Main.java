@@ -14,8 +14,8 @@ public class Main {
 		Affichage TB = new Affichage("BB");
 
 		TB.start();
-
 		TA.start();
+		
 	}
 
 }

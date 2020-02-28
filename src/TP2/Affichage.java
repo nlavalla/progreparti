@@ -8,14 +8,15 @@ import java.lang.String;
 
 public class Affichage extends Thread{
 	String texte; 
-
+	static Exclusion exclusionAffichage=new Exclusion();
 	public Affichage (String txt){texte=txt;}
 	
 	public void run(){
-
+		synchronized (exclusionAffichage) {
 		for (int i=0; i<texte.length(); i++){
-		    System.out.print(texte.charAt(i));
+			 System.out.print(texte.charAt(i));
 		    try {sleep(100);} catch(InterruptedException e){};
+		}
 		}
 
 	}
