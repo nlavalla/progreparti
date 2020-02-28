@@ -13,8 +13,8 @@ public class Main {
 		Affichage TA = new Affichage("AAA");
 		Affichage TB = new Affichage("BB");
 
-		TB.start();
-		TA.start();
+		TB.ecrire();
+		TA.ecrire();
 		
 	}
 
