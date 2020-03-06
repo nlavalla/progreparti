@@ -14,7 +14,7 @@ public class PanelFils extends JPanel implements ActionListener {
 	public PanelFils (){
 		
 		bouton.addActionListener(this);
-		sonMobile= new UnMobile(LARG,HAUT);
+	//	sonMobile= new UnMobile(LARG,HAUT);
     	Thread laTache= new Thread(sonMobile);
     	laTache.start();
     	JButton bouton=new JButton("Envoie");

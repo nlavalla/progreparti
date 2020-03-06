@@ -10,20 +10,12 @@ class UneFenetre extends JFrame implements ActionListener
     
    
 
-    private final int LARG=500, HAUT=250, NBRLIG=3;
-    JButton sonarret1 =new JButton("Arret");
-    Thread laTache1;
-    UnMobile sonMobile1;
-    
-    JButton sonarret2 =new JButton("Arret");
-    Thread laTache2;
-    UnMobile sonMobile2;
-    
-    JButton sonarret3 =new JButton("Arret");
-    Thread laTache3;
-    UnMobile sonMobile3;
-    
-    
+    private final int LARG=500, HAUT=250;
+    int NBRLIG=5;
+    Thread laTache[];
+    UnMobile lesMobiles[];
+    JButton bouton[];
+    SemaphoreGeneral sem = new SemaphoreGeneral(0);
     //JButton reprise =new JButton("reprise");
     
     
@@ -43,32 +35,22 @@ class UneFenetre extends JFrame implements ActionListener
     	*/
     	Container leConteneur = getContentPane();
     	leConteneur.setLayout (new GridLayout(NBRLIG, 2));
+    	 laTache= new Thread[NBRLIG];
+         lesMobiles=new UnMobile[NBRLIG];
+         bouton=new JButton[NBRLIG];
+    	for (int i=0; i<NBRLIG;i++){
+    		lesMobiles[i]=new UnMobile(LARG,HAUT,sem);
+    		leConteneur.add(lesMobiles[i]);
+    		laTache[i]= new Thread(lesMobiles[i]);
+    		bouton[i]=new JButton("M/A");
+    		leConteneur.add(bouton[i]);
+    		bouton[i].addActionListener(this);
+    	}
     	
-    	sonMobile1=new UnMobile(LARG, HAUT);
-    	sonarret1= new JButton ("Start/Stop");
-    	sonarret1.addActionListener(this);
-    	leConteneur.add(sonMobile1);
-    	leConteneur.add(sonarret1);
-    	laTache1= new Thread(sonMobile1);
-    	laTache1.start();
-    	
-    	sonMobile2=new UnMobile(LARG,HAUT);
-    	sonarret2= new JButton ("Start/Stop");
-    	sonarret2.addActionListener(this);
-    	leConteneur.add(sonMobile2);
-     	leConteneur.add(sonarret2);
-    	laTache2= new Thread(sonMobile2);
-    	laTache2.start();
-    	
-    	sonMobile3=new UnMobile(LARG,HAUT);
-    	sonarret3= new JButton ("Start/Stop");
-    	sonarret3.addActionListener(this);
-    	leConteneur.add(sonMobile3);
-     	leConteneur.add(sonarret3);
-    	laTache3= new Thread(sonMobile3);
-    	laTache3.start();
-    	
-    	
+    	for (int i=0; i<NBRLIG;i++){
+    		laTache[i].start();
+    	}
+
     	setSize(1000,600);
 		setVisible(true);
 		setLocation(200,300);
@@ -78,43 +60,20 @@ class UneFenetre extends JFrame implements ActionListener
 	// lancer laThread 
     }
     public void actionPerformed(ActionEvent parEvt) {
-    	
-    	if(parEvt.getSource()==sonarret1){
-			if (sonMobile1.getActivite()){
-				laTache1.suspend();
-				sonMobile1.setActivite(false);
+    	for (int i=0; i<=NBRLIG;i++){
+    	if(parEvt.getSource()==bouton[i]){
+			if (lesMobiles[i].getActivite()){
+				laTache[i].suspend();
+				lesMobiles[i].setActivite(false);
 			}
 
-			else if(! sonMobile1.getActivite()){
-				laTache1.resume();
-				sonMobile1.setActivite(true);
+			else if(! lesMobiles[i].getActivite()){
+				laTache[i].resume();
+				lesMobiles[i].setActivite(true);
 			}
     	}
-		if(parEvt.getSource()==sonarret2){
-			if (sonMobile2.getActivite()){
-				laTache2.suspend();
-				sonMobile2.setActivite(false);
-			}
-
-			else if(! sonMobile2.getActivite()){
-				laTache2.resume();
-				sonMobile2.setActivite(true);
-			}
-
-		}
-		if(parEvt.getSource()==sonarret3){
-			if (sonMobile3.getActivite()){
-				laTache3.suspend();
-				sonMobile3.setActivite(false);
-			}
-
-			else if(! sonMobile3.getActivite()){
-				laTache3.resume();
-				sonMobile3.setActivite(true);
-			}
-
-		}
 		
 	}
 
     }
+}

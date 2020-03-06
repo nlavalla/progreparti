@@ -6,17 +6,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import TP1.Semaphore;
+
 class UnMobile extends JPanel implements Runnable
 {
     int saLargeur, saHauteur, sonDebDessin;
     final int sonPas = 10, sonTemps=50, sonCote=40;
 	boolean activite;
+    SemaphoreGeneral sem ;
 
-    UnMobile(int telleLargeur, int telleHauteur)
+    UnMobile(int telleLargeur, int telleHauteur, SemaphoreGeneral sem)
     {
 	super();
 	saLargeur = telleLargeur;
 	saHauteur = telleHauteur;
+	sem=this.sem;
 	
 	setSize(telleLargeur, telleHauteur);
     }
@@ -25,16 +29,38 @@ class UnMobile extends JPanel implements Runnable
     {
     activite=true;
     while(true){
-	for (sonDebDessin=0; sonDebDessin < saLargeur - sonPas; sonDebDessin+= sonPas)
+    int debSectionCritique=saLargeur/3;
+    int finSectionCritique=(saLargeur/3)*2;
+   
+	for (sonDebDessin=0; sonDebDessin < debSectionCritique; sonDebDessin+= sonPas)
 	    {
 		repaint();
 		try{Thread.sleep(sonTemps);}
 		catch (InterruptedException telleExcp)
 		    {telleExcp.printStackTrace();}
 	    }
-	
-	for (sonDebDessin=490; sonDebDessin >0; sonDebDessin=sonDebDessin-sonPas)
+	sem.Wait();
+	for (sonDebDessin=debSectionCritique; sonDebDessin <finSectionCritique ; sonDebDessin+= sonPas)
     {
+	repaint();
+	try{Thread.sleep(sonTemps);}
+	catch (InterruptedException telleExcp)
+	    {telleExcp.printStackTrace();}
+    }
+	 sem.Signal();
+	for (; sonDebDessin < saLargeur - sonPas; sonDebDessin+= sonPas)
+    {
+	repaint();
+	try{Thread.sleep(sonTemps);}
+	catch (InterruptedException telleExcp)
+	    {telleExcp.printStackTrace();}
+    }
+	
+	for (; sonDebDessin >0; sonDebDessin=sonDebDessin-sonPas)
+    {
+		/*if((sonDebDessin>(saLargeur/5)) && sonDebDessin<(saLargeur/5)*2)
+			sem.syncWait();
+		sem.syncSignal();*/
 		repaint();
 		try{Thread.sleep(sonTemps);}
 		catch (InterruptedException telleExcp)
@@ -42,6 +68,7 @@ class UnMobile extends JPanel implements Runnable
     }
 	
     }
+    
 	    }
     
 
