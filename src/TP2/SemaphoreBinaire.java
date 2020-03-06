@@ -9,9 +9,18 @@ public SemaphoreBinaire(int valeurInitiale){
 	//System.out.print(valeurInitiale);
 }
 public final synchronized void syncSignal(){
+	System.out.print("\n je sors \n");
+	System.out.print(valeur);
 	super.syncSignal();
-	//System.out.print(valeur);
+	
 	if (valeur>1) valeur = 1;
+	
+}
+public final synchronized void syncWait(){
+	System.out.print("\n je rentre \n");
+	System.out.print(valeur);
+	super.syncWait();
+	
 }
 }
 
