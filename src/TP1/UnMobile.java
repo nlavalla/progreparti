@@ -13,15 +13,12 @@ class UnMobile extends JPanel implements Runnable
     int saLargeur, saHauteur, sonDebDessin;
     final int sonPas = 10, sonTemps=50, sonCote=40;
 	boolean activite;
-    SemaphoreGeneral sem ;
-
-    UnMobile(int telleLargeur, int telleHauteur, SemaphoreGeneral sem)
+	static SemaphoreGeneral sem = new SemaphoreGeneral(2);
+    UnMobile(int telleLargeur, int telleHauteur)
     {
 	super();
 	saLargeur = telleLargeur;
-	saHauteur = telleHauteur;
-	sem=this.sem;
-	
+	saHauteur = telleHauteur;	
 	setSize(telleLargeur, telleHauteur);
     }
 
@@ -29,32 +26,43 @@ class UnMobile extends JPanel implements Runnable
     {
     activite=true;
     while(true){
-    int debSectionCritique=saLargeur/3;
-    int finSectionCritique=(saLargeur/3)*2;
-   
-	for (sonDebDessin=0; sonDebDessin < debSectionCritique; sonDebDessin+= sonPas)
-	    {
-		repaint();
-		try{Thread.sleep(sonTemps);}
-		catch (InterruptedException telleExcp)
-		    {telleExcp.printStackTrace();}
-	    }
-	sem.Wait();
-	for (sonDebDessin=debSectionCritique; sonDebDessin <finSectionCritique ; sonDebDessin+= sonPas)
-    {
-	repaint();
-	try{Thread.sleep(sonTemps);}
-	catch (InterruptedException telleExcp)
-	    {telleExcp.printStackTrace();}
-    }
-	 sem.Signal();
-	for (; sonDebDessin < saLargeur - sonPas; sonDebDessin+= sonPas)
-    {
-	repaint();
-	try{Thread.sleep(sonTemps);}
-	catch (InterruptedException telleExcp)
-	    {telleExcp.printStackTrace();}
-    }
+    	for (; sonDebDessin < (saLargeur - sonCote) / 3; sonDebDessin += sonPas)
+		{
+			repaint();
+			try{
+				Thread.sleep(sonTemps);
+			}
+			catch (InterruptedException telleExcp)
+			{
+				telleExcp.printStackTrace();
+			}
+		}
+
+		sem.Wait();		
+		for (; sonDebDessin < 2 * (saLargeur - sonCote) / 3; sonDebDessin += sonPas)
+		{
+			repaint();
+			try{
+				Thread.sleep(sonTemps);
+			}
+			catch (InterruptedException telleExcp)
+			{
+				telleExcp.printStackTrace();
+			}
+		}
+		sem.Signal();
+
+		for (; sonDebDessin < (saLargeur - 2*sonCote); sonDebDessin += sonPas)
+		{
+			repaint();
+			try{
+				Thread.sleep(sonTemps);
+			}
+			catch (InterruptedException telleExcp)
+			{
+				telleExcp.printStackTrace();
+			}
+		}
 	
 	for (; sonDebDessin >0; sonDebDessin=sonDebDessin-sonPas)
     {

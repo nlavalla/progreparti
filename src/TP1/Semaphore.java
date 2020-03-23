@@ -8,16 +8,17 @@ public abstract class Semaphore {
 	valeur = valeurInitiale>0 ? valeurInitiale:0;
     }
 
-    public synchronized void syncWait(){
+    public synchronized void Wait(){
 	try {
 	    while(valeur<=0){
 		wait();
         }
 	    valeur--;
+	    
 	} catch(InterruptedException e){}
     }
 
-    public synchronized void syncSignal(){
+    public synchronized void Signal(){
 	if(++valeur > 0) notifyAll();
     }
 }

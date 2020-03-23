@@ -15,7 +15,6 @@ class UneFenetre extends JFrame implements ActionListener
     Thread laTache[];
     UnMobile lesMobiles[];
     JButton bouton[];
-    SemaphoreGeneral sem = new SemaphoreGeneral(0);
     //JButton reprise =new JButton("reprise");
     
     
@@ -38,8 +37,9 @@ class UneFenetre extends JFrame implements ActionListener
     	 laTache= new Thread[NBRLIG];
          lesMobiles=new UnMobile[NBRLIG];
          bouton=new JButton[NBRLIG];
+    
     	for (int i=0; i<NBRLIG;i++){
-    		lesMobiles[i]=new UnMobile(LARG,HAUT,sem);
+    		lesMobiles[i]=new UnMobile(LARG,HAUT);
     		leConteneur.add(lesMobiles[i]);
     		laTache[i]= new Thread(lesMobiles[i]);
     		bouton[i]=new JButton("M/A");
@@ -51,7 +51,7 @@ class UneFenetre extends JFrame implements ActionListener
     		laTache[i].start();
     	}
 
-    	setSize(1000,600);
+    	setSize(LARG*2,HAUT*2);
 		setVisible(true);
 		setLocation(200,300);
 	// ajouter sonMobile a la fenetre
